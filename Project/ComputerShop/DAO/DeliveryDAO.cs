@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Objects;
 using System.Data.SqlClient;
 using ComputerShop.Models;
+using WebMatrix.WebData;
 
 namespace ComputerShop.DAO
 {
@@ -54,8 +55,7 @@ namespace ComputerShop.DAO
                 where c.orderdelivery_id == id
                 select c.delivery_id
                 )
-                .FirstOrDefault();
-           
+                .FirstOrDefault();           
                 delivery delivery = _entities.delivery.Find(idDel);
                 _entities.delivery.Remove(delivery);
                 _entities.SaveChanges();
@@ -87,6 +87,18 @@ namespace ComputerShop.DAO
                 return false;
             }
             return true;
+        }
+
+        public void CreateDelivery(delivery delivery)
+        {
+            delivery.orderdelivery_id = getDeliveryForCreate(WebSecurity.CurrentUserId);
+            delivery.cost = 200;
+            delivery.delivery_type = "доставка на дом";
+            delivery.delivery_status = "в магазине";
+            _entities.delivery.Add(delivery);
+            _entities.SaveChanges();
+            _entities.Entry(delivery).State = EntityState.Modified;
+            _entities.SaveChanges();
         }
 
     }

@@ -17,16 +17,15 @@ namespace ComputerShop.Controllers
     {
         private ComputerShopDBEntities db = new ComputerShopDBEntities();
         private DeliveryDAO deliveryDAO = new DeliveryDAO();
-        //
-        // GET: /Delivery/
+
+
         [Authorize(Roles = "Client")]
+        [HttpGet]
         public ActionResult Index()
         {
-          
             var delivery = deliveryDAO.getDelivery(WebSecurity.CurrentUserId);
             ViewData.Model = delivery;
             return View();
-           
         }
 
         [Authorize(Roles = "Client")]
@@ -38,33 +37,21 @@ namespace ComputerShop.Controllers
 
         //
         // GET: /Delivery/Create
-
+        [HttpGet]
         public ActionResult Create()
         {
-            
             return View();
         }
 
-        //
-        // POST: /Delivery/Create
         [Authorize(Roles = "Client")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(delivery delivery)
         {
-                delivery.orderdelivery_id = deliveryDAO.getDeliveryForCreate(WebSecurity.CurrentUserId);
-                delivery.cost = 200;
-                delivery.delivery_type = "доставка на дом";
-                delivery.delivery_status = "в магазине";
-                db.delivery.Add(delivery);
-                db.SaveChanges();
-                db.Entry(delivery).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index","Home");
-            
+            deliveryDAO.CreateDelivery(delivery);
+            return RedirectToAction("Index", "Home");
         }
-
-
+        
         protected override void Dispose(bool disposing)
         {
             db.Dispose();

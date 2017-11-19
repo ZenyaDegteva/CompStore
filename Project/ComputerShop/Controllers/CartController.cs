@@ -17,6 +17,7 @@ namespace ComputerShop.Controllers
 
         private ComputerShopDBEntities db = new ComputerShopDBEntities();
         order order = new order();
+
         public ActionResult Index()
         {
             Cart cart = getCart();
@@ -35,10 +36,7 @@ namespace ComputerShop.Controllers
                 order.product.Add(product);
             }
             else
-            {
                 return HttpNotFound();
-            }
-            
             return PartialView(product);
         }
 
@@ -51,16 +49,13 @@ namespace ComputerShop.Controllers
                 order.product.Remove(product);
             }
             else
-            {
                 return HttpNotFound();
-            }
             return RedirectToAction("Index");
         }
 
         [HttpGet]
         public ActionResult Clear()
         {
-
             return View();
         }
 
