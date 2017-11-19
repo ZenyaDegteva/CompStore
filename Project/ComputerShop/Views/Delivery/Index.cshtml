@@ -1,0 +1,14 @@
+﻿@model IEnumerable<ComputerShop.Models.delivery>
+
+@{
+    ViewBag.Title = "Состояние доставки";
+}
+
+@foreach (var item in Model) {
+       
+               <p> Ваш заказ </p>  @Html.DisplayFor(modelItem => item.delivery_status)
+            
+                @Html.ActionLink("Информация о доставке", "Details", new { id=item.delivery_id })
+            
+                }
+            

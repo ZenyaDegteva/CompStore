@@ -1,0 +1,10 @@
+﻿@model ComputerShop.Models.order
+
+@{
+    ViewBag.Title = "Оплатить заказ";
+}
+<div class="content">
+    @using (Html.BeginForm(new { id = Model.order_id })) {
+        <input type="submit" value="Оплатить" />
+    }
+</div>
