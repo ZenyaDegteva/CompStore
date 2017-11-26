@@ -1,26 +1,32 @@
 ﻿@model IEnumerable<ComputerShop.Models.product>
-
 @{
     ViewBag.Title = "Index";
 }
-
 <h2>Index</h2>
-
-<p> @if (User.IsInRole("Seller")){
-    @Html.ActionLink("Create New", "Create")
-}
+<p>
+    @if (User.IsInRole("Seller"))
+    {
+        @Html.ActionLink("Create New", "Create")
+    }
 </p>
 @using (Html.BeginForm("Index", "Product", FormMethod.Get))
 {
-    <p>
+    <div>
+        <div>
+            <p>
+                Поиск товара: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+                <input type="submit" value="Search" />
+                <span class="">Количество товаров в корзине:</span>
+                <span id="product-count">0</span>
+                <span class="">@Html.ActionLink("Перейти в корзину", "Index", "Cart")</span>
+            </p>
+        </div>
 
-        Поиск товара: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
-        <input type="submit" value="Search" />
-    </p>
+    </div>
 }
 <table>
     <tr>
-        
+
         <th>
             @Html.DisplayNameFor(model => model.product_name)
         </th>
@@ -36,39 +42,66 @@
         <th>
             @Html.DisplayNameFor(model => model.price)
         </th>
-        
+
         <th></th>
     </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
 
-@foreach (var item in Model) {
-    <tr>
-        
-        <td>
-            @Html.DisplayFor(modelItem => item.product_name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.category)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.manufacturer)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.price)
-        </td>
-        <td>
-             @if (User.IsInRole("Seller")){
-            @Html.ActionLink("Изменить", "Edit", new { id=item.product_id }) 
-            @Html.ActionLink("Инфо", "Details", new { id=item.product_id }) 
-            @Html.ActionLink("Удалить", "Delete", new { id=item.product_id })
-            }
-            else if (User.IsInRole("Client")) {
-            @Ajax.ActionLink("Добавить в корзину", "AddToCart", "Cart", new { id = item.product_id }, new AjaxOptions { UpdateTargetId = "message_box" })
-            }
-        </td>
-    </tr>
-}
-
+            <td>
+                @Html.DisplayFor(modelItem => item.product_name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.manufacturer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.price)
+            </td>
+            <td>
+                @if (User.IsInRole("Seller"))
+                {
+                    @Html.ActionLink("Изменить", "Edit", new { id = item.product_id })
+                    @Html.ActionLink("Инфо", "Details", new { id = item.product_id })
+                    @Html.ActionLink("Удалить", "Delete", new { id = item.product_id })
+                }
+                else if (User.IsInRole("Client"))
+                {
+                    @*@Ajax.ActionLink("Добавить в корзину", "AddToCart", "Cart", new { id = item.product_id }, new AjaxOptions { UpdateTargetId = "message_box" })*@
+                    <button type="button" class="btn btn-default" onclick="addToCart(@item.product_id)">Добавить в корзину</button>
+                }
+            </td>
+        </tr>
+    }
 </table>
+<script type="text/javascript">
+
+    function addToCart(productId) {
+        var url = '@Url.Action("AddToCart", "Cart")'
+         $.ajax({
+            type: "POST",
+            url: url,
+            data: {"id":productId},
+            success: function (data) {
+                debugger;
+                alert("Товар " + data.ProductName + "добавлен в корзину!");
+                changeCount(data.ProductCount);
+            },
+            error: function () {
+            }
+        });
+    }
+
+    function changeCount(prCount) {
+        debugger;
+        var a = $("#product-count");
+        $("#product-count").text(prCount);
+    }
+
+</script>

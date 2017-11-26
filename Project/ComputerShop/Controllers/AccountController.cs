@@ -39,14 +39,10 @@ namespace ComputerShop.Controllers
             {
                 return RedirectToLocal(returnUrl);
             }
-
-            // Появление этого сообщения означает наличие ошибки; повторное отображение формы
             ModelState.AddModelError("", "Имя пользователя или пароль указаны неверно.");
             return View(model);
         }
 
-        //
-        // POST: /Account/LogOff
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -57,17 +53,11 @@ namespace ComputerShop.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        //
-        // GET: /Account/Register
-
         [AllowAnonymous]
         public ActionResult Register()
         {
             return View();
         }
-
-        //
-        // POST: /Account/Register
 
         [HttpPost]
         [AllowAnonymous]
@@ -76,7 +66,6 @@ namespace ComputerShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Попытка зарегистрировать пользователя
                 try
                 {
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
@@ -88,13 +77,9 @@ namespace ComputerShop.Controllers
                     ModelState.AddModelError("", ErrorCodeToString(e.StatusCode));
                 }
             }
-
-            // Появление этого сообщения означает наличие ошибки; повторное отображение формы
             return View(model);
         }
 
-        //
-        // POST: /Account/Disassociate
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -102,8 +87,6 @@ namespace ComputerShop.Controllers
         {
             string ownerAccount = OAuthWebSecurity.GetUserName(provider, providerUserId);
             ManageMessageId? message = null;
-
-            // Удалять связь учетной записи, только если текущий пользователь — ее владелец
             if (ownerAccount == User.Identity.Name)
             {
                 // Транзакция используется, чтобы помешать пользователю удалить учетные данные последнего входа

@@ -27,6 +27,7 @@ namespace ComputerShop.Controllers
             return View(cart);
         }
 
+        [HttpPost]
         public ActionResult AddToCart(int id = 0)
         {
             product product = db.product.Find(id);
@@ -37,7 +38,14 @@ namespace ComputerShop.Controllers
             }
             else
                 return HttpNotFound();
-            return PartialView(product);
+            //return PartialView(product);
+            var content = getCart().Content;
+            int prCount = 0;
+            if (content.Any())
+            {
+                prCount = content.Count();
+            }           
+            return Json(new { ProductName = product.product_name, ProductCount = prCount });
         }
 
         public ActionResult Remove(int id = 0)
