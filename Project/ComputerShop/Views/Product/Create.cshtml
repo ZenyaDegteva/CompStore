@@ -54,13 +54,13 @@
             @Html.ValidationMessageFor(model => model.price)
         </div>
 
-        <div class="editor-label">
+        @*<div class="editor-label">
             @Html.LabelFor(model => model.productOrder_id, "order")
-        </div>
-        <div class="editor-field">
+        </div>*@
+        @*<div class="editor-field">
             @Html.DropDownList("productOrder_id", String.Empty)
             @Html.ValidationMessageFor(model => model.productOrder_id)
-        </div>
+        </div>*@
 
         <p>
             <input type="submit" value="Create" />

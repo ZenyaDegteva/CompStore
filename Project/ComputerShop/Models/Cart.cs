@@ -4,9 +4,11 @@ using System.Linq;
 using System.Web;
 namespace ComputerShop.Models
 {
+    //корзина
     public class Cart
     {
         private int CartID { get; set; }
+        //первый int - ключ, то есть Id - товара, второй int - количество товаров
         private IDictionary<int, int> content;
 
         public IDictionary<int, int> Content
@@ -17,19 +19,25 @@ namespace ComputerShop.Models
             }
         }
 
+        //конструктор корзины, по умолчанию она пуста
         public Cart()
         {
             content = new Dictionary<int, int>();
         }
 
+
+        //добавление товара в корзину
         public void AddProduct(int id)
         {
+            //если такой товар есть в корзине (поиск по ключу)
             if (Content.Keys.Contains(id))
             {
+                //значит, контент увеличивается, то есть количество товара по Id увеличивается, например mouse - 4 (3, 4)
                 Content[id]++;
             }
             else
             {
+                //в противном случае - создаем новый объект в нашей корзине, то есть добавляем новый товар в размере 1
                 Content.Add(id, 1);
             }
         }

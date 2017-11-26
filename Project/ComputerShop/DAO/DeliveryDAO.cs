@@ -19,43 +19,41 @@ namespace ComputerShop.DAO
 
         public IEnumerable<delivery> getDelivery(int id)
         {
-            int orderId =
-                (
-                from order in _entities.order
-                where order.userorder_id == id
-                select order.order_id
-                )
-                .FirstOrDefault();
+            int orderId = (from order in _entities.order
+                           where order.userorder_id == id
+                           select order.order_id)
+                          .FirstOrDefault();
+
             if (orderId > 0)
-                return (
-                    from delivery in _entities.delivery
-                    where delivery.orderdelivery_id == orderId
-                    select delivery);
+            {
+                var del = from delivery in _entities.delivery
+                          where delivery.orderdelivery_id == orderId
+                          select delivery;
+                return del;
+            }
             else
                 throw new Exception("Ouups");
         }
 
         public int getDeliveryForCreate(int id)
         {
-            return
-                (
-                from c in _entities.order
-                where c.userorder_id == id
-                select c.order_id
-                )
-                .FirstOrDefault();
+            int orderId = (from c in _entities.order
+                           where c.userorder_id == id
+                           select c.order_id
+                           ).FirstOrDefault();
+            return orderId;
         }
+
         public bool deleteDelivery(int id)
         {
             try
             {
-                int idDel =
-                (
-                from c in _entities.delivery
-                where c.orderdelivery_id == id
-                select c.delivery_id
-                )
-                .FirstOrDefault();           
+                int idDel = (from c in _entities.delivery
+                             where c.orderdelivery_id == id
+                             select c.delivery_id
+                             )
+                            .FirstOrDefault();
+
                 delivery delivery = _entities.delivery.Find(idDel);
                 _entities.delivery.Remove(delivery);
                 _entities.SaveChanges();
@@ -70,13 +68,11 @@ namespace ComputerShop.DAO
         {
             try
             {
-                int idDel = 
-                    (
-                    from c in _entities.delivery
-                    where c.orderdelivery_id == id
-                    select c.delivery_id
-                    )
-                    .FirstOrDefault();            
+                int idDel = (from c in _entities.delivery
+                             where c.orderdelivery_id == id
+                             select c.delivery_id
+                            )
+                            .FirstOrDefault();
                 delivery delivery = _entities.delivery.Find(idDel);
                 delivery.delivery_status = "отправлен";
                 _entities.Entry(delivery).State = EntityState.Modified;

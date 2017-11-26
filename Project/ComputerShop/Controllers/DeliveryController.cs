@@ -19,7 +19,7 @@ namespace ComputerShop.Controllers
         private DeliveryDAO deliveryDAO = new DeliveryDAO();
 
 
-        [Authorize(Roles = "Client")]
+        [Authorize(Roles = "Client,Admin")]
         [HttpGet]
         public ActionResult Index()
         {

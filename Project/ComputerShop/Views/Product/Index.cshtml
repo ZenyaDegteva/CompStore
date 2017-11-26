@@ -11,14 +11,18 @@
 </p>
 @using (Html.BeginForm("Index", "Product", FormMethod.Get))
 {
+    //строка поиска товара
     <div>
         <div>
             <p>
-                Поиск товара: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+                Поиск товара: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @placeholder = "Поиск по названию, категории или по цене", @style = "width:364px;" })
                 <input type="submit" value="Search" />
+                @if (User.IsInRole("Client"))
+                {
                 <span class="">Количество товаров в корзине:</span>
                 <span id="product-count">0</span>
                 <span class="">@Html.ActionLink("Перейти в корзину", "Index", "Cart")</span>
+                }
             </p>
         </div>
 
@@ -26,7 +30,6 @@
 }
 <table>
     <tr>
-
         <th>
             @Html.DisplayNameFor(model => model.product_name)
         </th>
@@ -80,9 +83,11 @@
         </tr>
     }
 </table>
+
 <script type="text/javascript">
 
     function addToCart(productId) {
+        debugger;
         var url = '@Url.Action("AddToCart", "Cart")'
          $.ajax({
             type: "POST",
@@ -90,18 +95,18 @@
             data: {"id":productId},
             success: function (data) {
                 debugger;
-                alert("Товар " + data.ProductName + "добавлен в корзину!");
+                alert("Товар " + data.ProductName + " добавлен в корзину!");
                 changeCount(data.ProductCount);
             },
             error: function () {
+
             }
         });
     }
 
     function changeCount(prCount) {
         debugger;
-        var a = $("#product-count");
-        $("#product-count").text(prCount);
+     $("#product-count").text(prCount);
     }
 
 </script>

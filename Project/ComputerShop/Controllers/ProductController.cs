@@ -14,14 +14,26 @@ namespace ComputerShop.Controllers
         private ComputerShopDBEntities db = new ComputerShopDBEntities();
         //
         // GET: /Product/
-        
+
         public ActionResult Index(String searchString)
         {
-            var products = from s in db.product
-                           select s;
-            if (!String.IsNullOrEmpty(searchString))
+            //выборка всех продуктов
+            var products = from product in db.product
+                           select product;
+
+            int price = 0;
+            //если @try = true, значит searchString - число (цена), если нет - название товара либо категории
+            bool @try = int.TryParse(searchString, out price);
+
+            //если searchString не пуст и @try - не число, значит фильтруем по категории либо по названию товара
+            if (!String.IsNullOrEmpty(searchString) && !@try)
             {
                 products = products.Where(s => s.product_name.Contains(searchString) || s.category.Contains(searchString));
+            }
+            //в противном случае, если searchString не пуст и @try - число, значит, фильтруем по цене
+            else if (!String.IsNullOrEmpty(searchString) && @try)
+            {
+                products = products.Where(s => s.price <= price);
             }
             return View(products.ToList());
         }
@@ -45,7 +57,7 @@ namespace ComputerShop.Controllers
         public ActionResult Create()
         {
             ViewBag.productOrder_id = new SelectList(db.order, "order_id", "payment_method");
-           
+
             return View();
         }
 

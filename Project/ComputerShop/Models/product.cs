@@ -17,8 +17,8 @@ namespace ComputerShop.Models
         [Key]
         public int product_id { get; set; }
 
-        [Required]
-        [Display(Name = "Название товара")]
+        [Required] //поле не может быть пустым, если пустое, значит показывается сообщегние
+        [Display(Name = "Название товара")] //то, что будет показано
         public string product_name { get; set; }
         [Required]
         [Display(Name = "Категория")]
@@ -29,7 +29,7 @@ namespace ComputerShop.Models
         [Required]
         [Display(Name = "Производитель товара")]
         public string manufacturer { get; set; }
-        [Range(1, int.MaxValue)]
+        [Range(1, int.MaxValue)] //цена товаара не может быть отрицательным, то есть от 1 до максимального числа Int
         [Display(Name = "Цена")]
         public Nullable<int> price { get; set; }
         public Nullable<int> productOrder_id { get; set; }
